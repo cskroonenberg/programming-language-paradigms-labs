@@ -1,0 +1,49 @@
+<head>
+    <title>Caden's Tab Page</title>
+</head>
+<body>
+    <tab-panel>
+        <div data-tabname="one">Tab one</div>
+        <div data-tabname="two">Tab two</div>
+        <div data-tabname="three">Tab three</div>
+    </tab-panel>
+</body>
+<script>
+    function changeTab(newTab) {
+        currentTab = newTab;
+        for(tab of tabs) {
+            let tabname = tab.getAttribute("data-tabname");
+            if (tabname != currentTab) {
+                document.getElementById(tabname).style="color: default; font-size: 12px"
+                tab.style="display: none";
+            } else {
+                document.getElementById(tabname).style ="color: green; font-size: 14px";
+                tab.style="display: show";
+            }
+        }
+    }
+
+    function asTabs(node) {   
+        tabs = node.querySelectorAll("div");
+        for(tab of tabs) {
+            let button = document.createElement("BUTTON");
+            button.setAttribute("id", tab.getAttribute("data-tabname"));
+            button.innerHTML = tab.getAttribute("data-tabname");
+            document.body.insertBefore(button, document.body.querySelector("tab-panel"));
+            button.onclick = function(){
+                changeTab(button.innerHTML);
+            }
+            if (tab.getAttribute("data-tabname") != currentTab) {
+                button.style="color: default; font-size: 12px"
+                tab.style="display: none";
+            } else {
+                button.style ="color: green; font-size: 14px";
+                tab.style="display: show";
+            }
+        }
+    }
+
+    let currentTab = "one";
+
+    asTabs(document.querySelector("tab-panel"));
+</script>
