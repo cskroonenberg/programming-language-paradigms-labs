@@ -1,0 +1,74 @@
+<!--Author: Caden Kroonenberg-->
+<!--Date: 11-15-21-->
+<!DOCTYPE html>
+<head></head>
+<body>
+    <canvas width="1000" height="1000"></canvas>
+<script>
+// Dataset 1
+const data_1 = [
+{name: "Satisfied", count: 1027, color: "lightblue"},
+{name: "Neutral", count: 463, color: "lightgreen"},
+{name: "Unsatisfied", count: 510, color: "pink"},
+{name: "No comment", count: 102, color: "silver"}
+];
+
+// Dataset 2
+const data_2 = [
+{name: "Very satisfied", count: 63, color: "orange"},
+{name: "Satisfied", count: 104, color: "lightblue"},
+{name: "Neutral", count: 56, color: "lightgreen"},
+{name: "Unsatisfied", count: 51, color: "pink"},
+{name: "Very unsatisfied", count: 26, color: "yellow"},
+{name: "No comment", count: 18, color: "silver"}
+];
+
+function plotPie(center_X, center_Y, data, title) {
+    let radius = 100
+    // Plot Dataset
+    let cx = document.querySelector("canvas").getContext("2d");
+    // Count total # of responses in dataset
+    let total = data.reduce((sum, {count}) => sum + count, 0);
+    // Start at the top
+    let currentAngle = -0.5 * Math.PI;
+    // Iterate through all data points and make a slice for each
+    for (let result of data) {
+        let sliceAngle = (result.count / total) * 2 * Math.PI;
+        cx.beginPath();
+        // center=center_X,center_Y, radius=radius
+        // from current angle, clockwise by slice's angle
+        cx.arc(center_X, center_Y, radius, currentAngle, currentAngle + sliceAngle);
+        // Increment angle
+        currentAngle += sliceAngle;
+        // Complete line for slice
+        cx.lineTo(center_X, center_Y);
+        cx.fillStyle = result.color;
+        cx.fill();
+        // Find coordinates for text
+        var setX = center_X + Math.cos(currentAngle-(sliceAngle/2)) * radius*1.5;
+        var setY = center_Y + Math.sin(currentAngle-(sliceAngle/2)) * radius*1.25;
+        // Set text color and font
+        cx.fillStyle = 'black';
+        cx.font = '14px Calibri';
+        cx.textAlign='center';
+        // Place text on graph
+        cx.fillText(result.name,setX,setY);
+    }
+    // Place Title Label
+    var title_X = center_X;                 // X coord
+    var title_Y = center_Y  + 1.75*radius;  // Y coord
+    // Font styling
+    cx.fillStyle = 'black';
+    cx.font = '20px Calibri';
+    cx.textAlign='center';
+    // Place title on graph
+    cx.fillText(title,title_X,title_Y);
+}
+
+// Plot Dataset 1 at 100, 100
+plotPie(250, 250, data_1, 'Dataset 1');
+
+// Plot Dataset 2 at 500, 100
+plotPie(750, 250, data_2, 'Dataset 2');
+</script>
+</body>
